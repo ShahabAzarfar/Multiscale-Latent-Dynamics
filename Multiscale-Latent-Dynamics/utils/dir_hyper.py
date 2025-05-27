@@ -1,7 +1,7 @@
 import os
 
-base_dir = "/standard/sds_baek_energetic/data/physics/Shahab_Latent_PARC"
-dir = os.path.join(base_dir, 'Latent_PARC_modular/output')
+base_dir = '/home/user/Multiscale-Latent-Dynamics' # replace with your path
+dir = os.path.join(base_dir, 'weights')
 
 
 # Dictionary specifying directories to save and load weights of 

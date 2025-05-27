@@ -6,8 +6,12 @@ from models import layer
 
 
 def latent_evolution_unet(spatial_shape, n_channel, n_out_features, n_base_features):
-    """Build a U-Net using the Keras Functional API
+    """
+    The U-Net architecture considered for the latent autoregressive functionals of our model.
     
+    All the results presented in the paper correspond to this architecture for the decoupled and coupled
+    latent evolution mappings which encapsulate the dynamics of latent-mean and latent-log-variance fields.
+                                    
     Args:
         spatial_shape (2-tupe):    (H, W) of the input tensor of shape (H, W, channels)
         n_channels (int):   number of input channels
@@ -55,25 +59,34 @@ def latent_evolution_unet(spatial_shape, n_channel, n_out_features, n_base_featu
     return unet
 
 class Dynamics(keras.Model):
-    """Backbone model for the autoregressive functionals"""
+    """
+    Backbone model for the autoregressive functionals
+    
+    It specifies the architecture of the decoupled and coupled latent evolution mappings
+    for the dynamics of latent-mean and latent-log-variance fields. This class is intended
+    to improve the modularity of the full model for future extensions. 
+    Currently, only the `ResNet-16` architecture has been implemented as an example. 
+    
+    """
     def __init__(self, model_name, model_hypers):
         """
         Args: 
-            model_name (string):    specifies the architecture of the decoupled and coupled latent evolution mappings
-                                    for the dynamics of latent-mean and latent-log-variance fields. 
-                                    Currently, only `ResNet` architecture has been implemented.
-            model_hypers (list):    list of hyperparameters of the correponding architecture
+            model_name (string):    name of different architectures
+            model_hypers (list):    list of hyperparameters of the corresponding architecture
         """
         super(Dynamics, self).__init__()
         if model_name == 'resnet16':
             self.n_feats_map = model_hypers[0]
             self.backbone = resnet16(self.n_feats_map)
-        self.dropout = tf.keras.layers.Dropout(rate=0.1) 
-
+            self.dropout = tf.keras.layers.Dropout(rate=0.1) 
+        else:
+            raise ValueError("Currently, only the ResNet-16 architecture is implemented.")
+        
     def call(self, inputs):
         inputs = self.dropout(inputs)
         out = self.backbone(inputs)
         return out
+    
 class resnet_block(tf.keras.layers.Layer):
     def __init__(self, filters, n_blocks, stride=1, n_feats_map=None):
         super().__init__()
@@ -88,6 +101,7 @@ class resnet_block(tf.keras.layers.Layer):
         for i in range(1, self.n_blocks):
             x = self.resnet_blocks[i](x)
         return x
+    
 class resnet16(tf.keras.layers.Layer):
     def __init__(self, n_feats_map):
         super().__init__()
