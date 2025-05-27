@@ -24,10 +24,12 @@ class MesoDynamicsCoupledEfficient(keras.Model):
             meso_micro_ts_ratio (int):    the `floor division` ratio of meso-scale to micro-scale time-step 
             fields (list of strings):   list of the chosen names for the physicals fields involved in the multi-physics problem.                                                       
             output_fields (list of 2-tuples):   list of the form [(field_idx, field_name)] specifying the physical fields
-                                                whose reconstruction is considerd during training.
+                                                whose reconstruction is considered during training.
             latent_shape (3-tuple):  shape of latent field tensor (H, W, channels)
             loss_weights (list):    weights for each loss term considered during training
-            dynamics_model (string):    specifies the architecture considered for latant evolution autoregressive functionals
+            dynamics_model (string):    specifies the architecture considered for latent evolution autoregressive functionals.
+                                        Currently, it only accepts 'unet' or 'resnet16' corresponding to the 
+                                        implemented U-Net and ResNet architectures.
         """
         super(MesoDynamicsCoupledEfficient, self).__init__()
 
@@ -71,7 +73,10 @@ class MesoDynamicsCoupledEfficient(keras.Model):
             self.dyn_hypers = [self.latent_shape[2]*len(self.fields)] # [n_feats_map]
             self.latent_evolution_mean = Dynamics(self.dynamics_model, self.dyn_hypers)
             self.latent_evolution_var = Dynamics(self.dynamics_model, self.dyn_hypers)
-            
+
+        else:
+            raise ValueError("Currently, only the U-Net and ResNet-16 architectures are implemented.")
+
         # decoder corresponding to the output field           
         for field_idx, field in self.output_fields:
             setattr(self, f'{field}_decoder', vgg_decoder(input_shape=self.latent_shape))

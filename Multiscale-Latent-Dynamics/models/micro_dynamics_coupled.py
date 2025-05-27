@@ -18,10 +18,12 @@ class MicroDynamicsCoupled(MicroDynamicsDecoupled):
             ts (int):   number of predicted micro-scale time-steps
             fields (list of strings):   list of the chosen names for the physicals fields involved in the multi-physics problem.                                                       
             output_fields (list of 2-tuples):   list of the form [(field_idx, field_name)] specifying the physical fields
-                                                whose reconstruction is considerd during training.
+                                                whose reconstruction is considered during training.
             input_shape (3-tuple):  shape of input tensor (H, W, channels)
             loss_weights (list):    weights for each loss term considered during training
-            dynamics_model (string):    specifies the architecture considered for latant evolution autoregressive functionals
+            dynamics_model (string):    specifies the architecture considered for latent evolution autoregressive functionals.
+                                        Currently, it only accepts 'unet' or 'resnet16' corresponding to the 
+                                        implemented U-Net and ResNet architectures.
         """
         super(MicroDynamicsCoupled, self).__init__(ts, fields, output_fields, input_shape, loss_weights, dynamics_model)
         
@@ -41,6 +43,9 @@ class MicroDynamicsCoupled(MicroDynamicsDecoupled):
             for field in self.fields:
                 setattr(self, f'{field}_decoupled_evol_mean', Dynamics(self.dynamics_model, self.dec_dyn_hypers))
                 setattr(self, f'{field}_decoupled_evol_var', Dynamics(self.dynamics_model, self.dec_dyn_hypers))
+
+        else:
+            raise ValueError("Currently, only the U-Net and ResNet-16 architectures are implemented.")
                     
     def decoupled_evolution(self, z_mean, z_var):
         """Apply the decoupled dynamics autoregressive functional to the latent-mean and latent-log-vaiance fields

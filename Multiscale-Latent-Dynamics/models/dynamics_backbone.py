@@ -13,7 +13,7 @@ def latent_evolution_unet(spatial_shape, n_channel, n_out_features, n_base_featu
     latent evolution mappings which encapsulate the dynamics of latent-mean and latent-log-variance fields.
                                     
     Args:
-        spatial_shape (2-tupe):    (H, W) of the input tensor of shape (H, W, channels)
+        spatial_shape (2-tuple):    (H, W) of the input tensor of shape (H, W, channels)
         n_channels (int):   number of input channels
         n_out_features (int):   number of final output channels
         n_base_features (int):    number of output channels for the first convolutional block
