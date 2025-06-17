@@ -42,3 +42,14 @@ The details of training and making prediction by our model are best described in
 
 ## Citation
 To cite this work, please use the following:
+```
+@misc{azarfar2025latent,
+      title=    {Latent Representation Learning of Multi-scale Thermophysics: Application to Dynamics in Shocked Porous Energetic Material}, 
+      author=    {Shahab Azarfar and Joseph B. Choi and Phong CH. Nguyen and Yen T. Nguyen   and Pradeep Seshadri and H. S. Udaykumar and Stephen Baek},
+      year=    {2025},
+      eprint=   {2506.12996},
+      archivePrefix=    {arXiv},
+      primaryClass=    {physics.comp-ph},
+      url=   {https://arxiv.org/abs/2506.12996}, 
+}
+```
